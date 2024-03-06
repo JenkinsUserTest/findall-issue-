@@ -1,3 +1,40 @@
+
+If you're using a `CrudRepository` instead of a `JpaRepository`, the procedure is similar. Here's how you can adjust the test class:
+
+```java
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@DataJpaTest
+public class TestRideInfoRepository {
+
+    @Autowired
+    private RideInfoRepository rideInfoRepository;
+
+    @Test
+    public void testFindAll() {
+        Iterable<RideInfo> rideInfos = rideInfoRepository.findAll();
+        assertNotNull(rideInfos);
+        assertTrue(rideInfos.iterator().hasNext());
+    }
+}
+```
+
+In this version, `findAll()` method returns an `Iterable<RideInfo>`, so we adjust the test accordingly. We check if the iterable is not null and if it has at least one element.
+
+Make sure that `RideInfoRepository` extends `CrudRepository<RideInfo, RideInfo.RideInfoVehicleRpId>`.
+
+If the issue persists, please provide more details or the exact error message, and I'll assist you further.
+
+
+
+
+
+
 I see, if you're not currently writing the service layer and are instead focusing on testing the repository directly, you can still work around the issue with `findAll()` by using alternative approaches in your test cases.
 
 One approach is to retrieve entities individually using their composite keys. Since `findById()` method works fine with composite keys, you can loop through all possible composite keys and fetch each entity one by one. However, this approach may not be efficient, especially if you have a large number of entities.
